@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>King Luke MTG - Drip Shop Live Leaderboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            padding-top: 0;
+        }
+
+        /* Hot Pack Banner */
+        .hot-pack-banner {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin: 0 -20px 20px -20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .hot-pack-banner:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.5);
+        }
+
+        .hot-pack-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: hotPackShine 3s infinite;
+        }
+
+        .hot-pack-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .fire-icon {
+            font-size: 2em;
+            animation: flicker 1.5s infinite;
+        }
+
+        .hot-pack-text {
+            font-size: 1.2em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hot-pack-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes hotPackShine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .logo {
+            font-size: 3em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px rgba(255, 107, 107, 0.5);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #4ecdc4;
+            margin-bottom: 20px;
+        }
+
+        .info-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideIn 1s ease-out 0.3s both;
+        }
+
+        .prize-pool {
+            font-size: 2.5em;
+            color: #4ecdc4;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(78, 205, 196, 0.5);
+        }
+
+        .timer-section {
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            animation: slideIn 1s ease-out 0.5s both;
+        }
+
+        .countdown {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ff6b6b;
+            margin-top: 10px;
+        }
+
+        .create-account-btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        .create-account-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.6);
+        }
+
+        .leaderboard {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: slideIn 1s ease-out 0.7s both;
+        }
+
+        .leaderboard h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 2em;
+            color: #4ecdc4;
+        }
+
+        /* Podium Section */
+        .podium-section {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin-bottom: 40px;
+            padding: 20px;
+            gap: 10px;
+        }
+
+        .podium-place {
+            flex: 1;
+            max-width: 200px;
+            text-align: center;
+            position: relative;
+            animation: podiumRise 1s ease-out forwards;
+            opacity: 0;
+        }
+
+        .podium-place.first {
+            animation-delay: 0.3s;
+        }
+
+        .podium-place.second {
+            animation-delay: 0.1s;
+        }
+
+        .podium-place.third {
+            animation-delay: 0.5s;
+        }
+
+        .podium-user {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px 10px;
+            margin-bottom: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .podium-user::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            animation: shimmer 3s infinite;
+        }
+
+        .first .podium-user {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 215, 0, 0.1));
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .second .podium-user {
+            background: linear-gradient(135deg, rgba(192, 192, 192, 0.3), rgba(192, 192, 192, 0.1));
+            border: 2px solid rgba(192, 192, 192, 0.5);
+            box-shadow: 0 0 20px rgba(192, 192, 192, 0.3);
+        }
+
+        .third .podium-user {
+            background: linear-gradient(135deg, rgba(205, 127, 50, 0.3), rgba(205, 127, 50, 0.1));
+            border: 2px solid rgba(205, 127, 50, 0.5);
+            box-shadow: 0 0 20px rgba(205, 127, 50, 0.3);
+        }
+
+        .podium-rank {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .first .podium-rank {
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        }
+
+        .second .podium-rank {
+            color: #c0c0c0;
+            text-shadow: 0 0 20px rgba(192, 192, 192, 0.8);
+        }
+
+        .third .podium-rank {
+            color: #cd7f32;
+            text-shadow: 0 0 20px rgba(205, 127, 50, 0.8);
+        }
+
+        .podium-username {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .podium-spent {
+            color: #4ecdc4;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .podium-prize {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #ff6b6b;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+        }
+
+        .podium-stand {
+            background: linear-gradient(135deg, #2a2a4a, #1a1a2e);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px 10px 0 0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .first .podium-stand {
+            height: 150px;
+            background: linear-gradient(135deg, #3a3a0a, #2a2a0a);
+            border-color: rgba(255, 215, 0, 0.3);
+        }
+
+        .second .podium-stand {
+            height: 120px;
+            background: linear-gradient(135deg, #3a3a3a, #2a2a2a);
+            border-color: rgba(192, 192, 192, 0.3);
+        }
+
+        .third .podium-stand {
+            height: 90px;
+            background: linear-gradient(135deg, #3a2a1a, #2a1a0a);
+            border-color: rgba(205, 127, 50, 0.3);
+        }
+
+        .trophy-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .first .trophy-icon {
+            color: #ffd700;
+            animation: bounce 2s infinite;
+        }
+
+        .second .trophy-icon {
+            color: #c0c0c0;
+            animation: bounce 2s infinite 0.3s;
+        }
+
+        .third .trophy-icon {
+            color: #cd7f32;
+            animation: bounce 2s infinite 0.6s;
+        }
+
+        @keyframes podiumRise {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shimmer {
+            to {
+                transform: translateX(100%);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+
+        .leaderboard-item:nth-child(1) { animation-delay: 0.1s; }
+        .leaderboard-item:nth-child(2) { animation-delay: 0.2s; }
+        .leaderboard-item:nth-child(3) { animation-delay: 0.3s; }
+        .leaderboard-item:nth-child(4) { animation-delay: 0.4s; }
+        .leaderboard-item:nth-child(5) { animation-delay: 0.5s; }
+        .leaderboard-item:nth-child(6) { animation-delay: 0.6s; }
+        .leaderboard-item:nth-child(7) { animation-delay: 0.7s; }
+        .leaderboard-item:nth-child(8) { animation-delay: 0.8s; }
+        .leaderboard-item:nth-child(9) { animation-delay: 0.9s; }
+        .leaderboard-item:nth-child(10) { animation-delay: 1s; }
+
+        .leaderboard-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .leaderboard-item.top-1 {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .leaderboard-item.top-2 {
+            background: linear-gradient(135deg, rgba(192, 192, 192, 0.2), rgba(192, 192, 192, 0.1));
+            border: 1px solid rgba(192, 192, 192, 0.3);
+        }
+
+        .leaderboard-item.top-3 {
+            background: linear-gradient(135deg, rgba(205, 127, 50, 0.2), rgba(205, 127, 50, 0.1));
+            border: 1px solid rgba(205, 127, 50, 0.3);
+        }
+
+        .rank {
+            font-size: 1.5em;
+            font-weight: bold;
+            width: 50px;
+            text-align: center;
+        }
+
+        .user-info {
+            flex: 1;
+            margin-left: 20px;
+        }
+
+        .username {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .amount-spent {
+            color: #4ecdc4;
+            font-size: 0.9em;
+        }
+
+        .prize {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #ff6b6b;
+            min-width: 100px;
+            text-align: right;
+        }
+
+        .disclaimer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            font-size: 0.9em;
+            color: #ccc;
+            animation: fadeIn 1s ease-out 1s both;
+        }
+
+        /* Live Packs Section */
+        .live-packs-section {
+            margin-top: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: slideIn 1s ease-out 1.2s both;
+        }
+
+        .live-packs-section h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 2em;
+            color: #4ecdc4;
+        }
+
+        .live-packs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .pack-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pack-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 10px 30px rgba(78, 205, 196, 0.3);
+        }
+
+        .pack-card.is-live::before {
+            content: 'LIVE';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        .pack-image {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(135deg, #3a3a5a, #2a2a4a);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            opacity: 0.7;
+        }
+
+        .pack-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .pack-price {
+            color: #4ecdc4;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        /* Latest Hits Section */
+        .latest-hits-section {
+            margin-top: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: slideIn 1s ease-out 1.4s both;
+        }
+
+        .latest-hits-section h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 2em;
+            color: #4ecdc4;
+        }
+
+        .hits-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            max-height: 600px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .hit-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .hit-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+        }
+
+        .hit-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #4a4a6a, #3a3a5a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            opacity: 0.5;
+        }
+
+        .hit-info {
+            padding: 15px;
+        }
+
+        .hit-card-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .hit-player {
+            font-size: 0.9em;
+            color: #888;
+            margin-bottom: 5px;
+        }
+
+        .hit-value {
+            color: #4ecdc4;
+            font-weight: bold;
+        }
+
+        .instagram-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Scrollbar styling */
+        .hits-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .hits-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .hits-container::-webkit-scrollbar-thumb {
+            background: rgba(78, 205, 196, 0.5);
+            border-radius: 4px;
+        }
+
+        .hits-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(78, 205, 196, 0.7);
+        }
+
+        .update-info {
+            text-align: center;
+            margin-top: 10px;
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @media (max-width: 600px) {
+            .logo {
+                font-size: 2em;
+            }
+            
+            .prize-pool {
+                font-size: 2em;
+            }
+            
+            .countdown {
+                font-size: 1.5em;
+            }
+            
+            .leaderboard-item {
+                padding: 10px 15px;
+            }
+            
+            .rank {
+                font-size: 1.2em;
+                width: 40px;
+            }
+            
+            .username {
+                font-size: 1em;
+            }
+            
+            .prize {
+                font-size: 1.1em;
+                min-width: 80px;
+            }
+            
+            /* Mobile podium adjustments */
+            .podium-section {
+                gap: 5px;
+                padding: 10px;
+            }
+            
+            .podium-place {
+                max-width: 120px;
+            }
+            
+            .podium-rank {
+                font-size: 2em;
+            }
+            
+            .podium-username {
+                font-size: 0.9em;
+            }
+            
+            .podium-prize {
+                font-size: 1.2em;
+            }
+            
+            .first .podium-stand {
+                height: 100px;
+            }
+            
+            .second .podium-stand {
+                height: 80px;
+            }
+            
+            .third .podium-stand {
+                height: 60px;
+            }
+            
+            .trophy-icon {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hot Pack Banner -->
+    <div class="hot-pack-banner" onclick="window.open('https://join.dripshop.live/KingLukeMtg', '_blank')">
+        <div class="hot-pack-content">
+            <span class="fire-icon">🔥</span>
+            <span class="hot-pack-text">HOTTEST PACK RIGHT NOW:</span>
+            <span class="hot-pack-name">2024 Prizm Football Mega Box</span>
+            <span class="fire-icon">🔥</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="logo">KING LUKE MTG</h1>
+            <p class="subtitle">Drip Shop Live Instant Pack Leaderboard</p>
+        </div>
+
+        <div class="info-box">
+            <div class="prize-pool">$1,000 PRIZE POOL</div>
+            <p>Top 10 spenders share the prize pool!</p>
+            <a href="https://join.dripshop.live/KingLukeMtg" class="create-account-btn" target="_blank">CREATE ACCOUNT</a>
+            <p style="margin-top: 15px; font-size: 0.9em; color: #ccc;">All purchases through KingLukeMTG's referral link count towards your rank</p>
+        </div>
+
+        <div class="timer-section">
+            <h3>Leaderboard Resets In:</h3>
+            <div class="countdown" id="countdown">Loading...</div>
+        </div>
+
+        <div class="leaderboard">
+            <h2>Current Leaderboard</h2>
+            <div id="podium-container"></div>
+            <div id="leaderboard-list">
+                <!-- Leaderboard items will be dynamically inserted here -->
+            </div>
+            <p class="update-info">Updates every 10 minutes</p>
+        </div>
+
+        <div class="disclaimer">
+            <p><strong>Disclaimer:</strong> Participation in Drip Shop Live instant packs involves financial transactions. Please spend responsibly and within your means. This leaderboard tracks purchases made through KingLukeMTG's referral link only.</p>
+        </div>
+
+        <!-- Live Packs Section -->
+        <div class="live-packs-section">
+            <h2>Live Instant Packs</h2>
+            <div class="live-packs-grid" id="live-packs-grid">
+                <!-- Live packs will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <!-- Latest Hits Section -->
+        <div class="latest-hits-section">
+            <h2>Latest Hits 🎯</h2>
+            <p style="text-align: center; margin-bottom: 20px; color: #888;">Community hits shared on Instagram & approved by King Luke</p>
+            <div class="hits-container" id="hits-container">
+                <!-- Hits will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Prize distribution (similar to packdraw structure)
+        const prizeDistribution = [
+            { rank: 1, prize: 300 },
+            { rank: 2, prize: 200 },
+            { rank: 3, prize: 150 },
+            { rank: 4, prize: 100 },
+            { rank: 5, prize: 75 },
+            { rank: 6, prize: 50 },
+            { rank: 7, prize: 40 },
+            { rank: 8, prize: 35 },
+            { rank: 9, prize: 30 },
+            { rank: 10, prize: 20 }
+        ];
+
+        // Sample leaderboard data (in production, this would come from your backend)
+        const leaderboardData = [
+            { username: "DarkMage2023", spent: 1250.00 },
+            { username: "CardKing99", spent: 980.50 },
+            { username: "MTGCollector", spent: 875.25 },
+            { username: "PackHunter", spent: 750.00 },
+            { username: "RareChaser", spent: 625.75 },
+            { username: "FoilSeeker", spent: 550.00 },
+            { username: "ValueTrader", spent: 425.50 },
+            { username: "BoltBender", spent: 380.00 },
+            { username: "ManaWeaver", spent: 325.25 },
+            { username: "DeckMaster", spent: 275.00 }
+        ];
+
+        // Function to censor username (show only first 4 characters)
+        function censorUsername(username) {
+            if (username.length <= 4) {
+                return username + '****';
+            }
+            return username.substring(0, 4) + '****';
+        }
+
+        // Function to update leaderboard display
+        function updateLeaderboard() {
+            const leaderboardList = document.getElementById('leaderboard-list');
+            const podiumContainer = document.getElementById('podium-container');
+            
+            // Clear existing content
+            leaderboardList.innerHTML = '';
+            podiumContainer.innerHTML = '';
+
+            // Create podium for top 3
+            if (leaderboardData.length >= 3) {
+                const podiumSection = document.createElement('div');
+                podiumSection.className = 'podium-section';
+
+                // Create podium places (2nd, 1st, 3rd order for visual effect)
+                const podiumOrder = [1, 0, 2]; // Display order: 2nd place, 1st place, 3rd place
+                const placeClasses = ['second', 'first', 'third'];
+                const trophies = ['🥈', '🥇', '🥉'];
+
+                podiumOrder.forEach((dataIndex, displayIndex) => {
+                    const user = leaderboardData[dataIndex];
+                    const prize = prizeDistribution[dataIndex].prize;
+                    const placeClass = placeClasses[displayIndex];
+                    const trophy = trophies[displayIndex];
+
+                    const podiumPlace = document.createElement('div');
+                    podiumPlace.className = `podium-place ${placeClass}`;
+
+                    podiumPlace.innerHTML = `
+                        <div class="podium-user">
+                            <div class="trophy-icon">${trophy}</div>
+                            <div class="podium-rank">${dataIndex + 1}</div>
+                            <div class="podium-username">${censorUsername(user.username)}</div>
+                            <div class="podium-spent">${user.spent.toFixed(2)}</div>
+                            <div class="podium-prize">${prize}</div>
+                        </div>
+                        <div class="podium-stand">${dataIndex + 1}</div>
+                    `;
+
+                    podiumSection.appendChild(podiumPlace);
+                });
+
+                podiumContainer.appendChild(podiumSection);
+            }
+
+            // Display remaining places (4-10)
+            for (let i = 3; i < leaderboardData.length && i < 10; i++) {
+                const user = leaderboardData[i];
+                const item = document.createElement('div');
+                item.className = 'leaderboard-item';
+
+                const rank = i + 1;
+                const prize = prizeDistribution[i].prize;
+
+                item.innerHTML = `
+                    <div class="rank">#${rank}</div>
+                    <div class="user-info">
+                        <div class="username">${censorUsername(user.username)}</div>
+                        <div class="amount-spent">Total Spent: ${user.spent.toFixed(2)}</div>
+                    </div>
+                    <div class="prize">${prize}</div>
+                `;
+
+                leaderboardList.appendChild(item);
+            }
+        }
+
+        // Countdown timer function
+        function updateCountdown() {
+            // Set the reset date (2 weeks from now for example)
+            const resetDate = new Date();
+            resetDate.setDate(resetDate.getDate() + 14);
+            resetDate.setHours(0, 0, 0, 0);
+
+            const now = new Date();
+            const timeRemaining = resetDate - now;
+
+            if (timeRemaining > 0) {
+                const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+                document.getElementById('countdown').innerHTML = 
+                    `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            } else {
+                document.getElementById('countdown').innerHTML = 'Resetting...';
+                // In production, trigger a reset here
+            }
+        }
+
+        // Initialize
+        updateLeaderboard();
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        // Sample live packs data (replace with real data from backend)
+        const livePacks = [
+            { name: "2024 Prizm Football Mega Box", price: "$149.99", isLive: true, icon: "🏈" },
+            { name: "Pokemon 151 Elite Trainer Box", price: "$89.99", isLive: true, icon: "⚡" },
+            { name: "One Piece Card Game Box", price: "$99.99", isLive: true, icon: "🏴‍☠️" },
+            { name: "MTG Collector Booster", price: "$249.99", isLive: false, icon: "🎴" },
+            { name: "NBA Hoops Blaster Box", price: "$39.99", isLive: true, icon: "🏀" },
+            { name: "Yu-Gi-Oh! Rarity Collection", price: "$79.99", isLive: false, icon: "🎯" }
+        ];
+
+        // Sample hits data (replace with real Instagram-approved hits)
+        const latestHits = [
+            { cardName: "Patrick Mahomes Auto /10", player: "User1234", value: "$2,500", time: "2 hours ago" },
+            { cardName: "Charizard ex Gold", player: "Pack****", value: "$800", time: "3 hours ago" },
+            { cardName: "Luka Doncic Rookie Prizm", player: "Coll****", value: "$1,200", time: "5 hours ago" },
+            { cardName: "One Piece Manga Rare", player: "Anim****", value: "$450", time: "6 hours ago" },
+            { cardName: "Black Lotus Reprint", player: "MTGf****", value: "$3,000", time: "8 hours ago" },
+            { cardName: "Wemby Rookie Auto", player: "Spor****", value: "$1,800", time: "12 hours ago" },
+            { cardName: "Pikachu Illustrator", player: "Poke****", value: "$5,000", time: "1 day ago" },
+            { cardName: "Tom Brady PSA 10", player: "Grid****", value: "$900", time: "1 day ago" }
+        ];
+
+        // Function to display live packs
+        function displayLivePacks() {
+            const packsGrid = document.getElementById('live-packs-grid');
+            packsGrid.innerHTML = '';
+
+            livePacks.forEach((pack, index) => {
+                const packCard = document.createElement('div');
+                packCard.className = `pack-card ${pack.isLive ? 'is-live' : ''}`;
+                packCard.style.animationDelay = `${index * 0.1}s`;
+                packCard.onclick = () => window.open('https://join.dripshop.live/KingLukeMtg', '_blank');
+
+                packCard.innerHTML = `
+                    <div class="pack-image">${pack.icon}</div>
+                    <div class="pack-name">${pack.name}</div>
+                    <div class="pack-price">${pack.price}</div>
+                `;
+
+                packsGrid.appendChild(packCard);
+            });
+        }
+
+        // Function to display latest hits
+        function displayLatestHits() {
+            const hitsContainer = document.getElementById('hits-container');
+            hitsContainer.innerHTML = '';
+
+            latestHits.forEach((hit, index) => {
+                const hitCard = document.createElement('div');
+                hitCard.className = 'hit-card';
+                hitCard.style.animationDelay = `${index * 0.1}s`;
+
+                hitCard.innerHTML = `
+                    <div class="instagram-badge">
+                        <span>📷</span>
+                        <span>IG</span>
+                    </div>
+                    <div class="hit-image">🏆</div>
+                    <div class="hit-info">
+                        <div class="hit-card-name">${hit.cardName}</div>
+                        <div class="hit-player">Hit by: ${hit.player}</div>
+                        <div class="hit-value">${hit.value}</div>
+                        <div style="color: #666; font-size: 0.8em; margin-top: 5px;">${hit.time}</div>
+                    </div>
+                `;
+
+                hitsContainer.appendChild(hitCard);
+            });
+        }
+
+        // Display live packs and hits
+        displayLivePacks();
+        displayLatestHits();
+
+        // Simulate periodic updates (in production, this would fetch from your backend)
+        setInterval(() => {
+            // Add some random variation to simulate live updates
+            leaderboardData.forEach(user => {
+                if (Math.random() > 0.7) {
+                    user.spent += Math.random() * 50;
+                }
+            });
+            leaderboardData.sort((a, b) => b.spent - a.spent);
+            updateLeaderboard();
+        }, 600000); // Update every 10 minutes
+    </script>
+</body>
+</html>
