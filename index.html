@@ -1128,86 +1128,51 @@
                 url: "https://www.dripshop.live/streams/bb14bed3-0c90-4f24-a29f-35410820862f?referral=KingLukeMtg",
                 image: "https://cdn.dripshop.live/stream/AfoHjU9MJT0x_qunmGlbr.webp",
                 title: "Final Fantasy RELEASE WEEKEND! Free Packs, Auctions & More with King Luke!",
-                datetime: new Date("2025-06-14T15:00:00-04:00") // Jun 14, 3:00 PM EST
+                date: "Jun 14",
+                time: "3:00 PM EST"
             },
             {
                 url: "https://www.dripshop.live/streams/1e415753-1ac9-4e07-961a-89132c9a28a7?referral=KingLukeMtg",
                 image: "https://cdn.dripshop.live/stream/AfoHjU9MJT0x_qunmGlbr.webp",
                 title: "Upcoming Stream",
-                datetime: new Date("2025-06-18T15:00:00-04:00") // Jun 18, 3:00 PM EST
+                date: "Jun 18",
+                time: "3:00 PM EST"
             },
             {
                 url: "https://www.dripshop.live/streams/3667a8eb-2341-45cc-a1db-4d317e8d799b?referral=KingLukeMtg",
                 image: "https://cdn.dripshop.live/stream/AfoHjU9MJT0x_qunmGlbr.webp",
                 title: "Upcoming Stream",
-                datetime: new Date("2025-06-21T15:00:00-04:00") // Jun 21, 3:00 PM EST
+                date: "Jun 21",
+                time: "3:00 PM EST"
             }
         ];
-
-        // Function to format stream date/time and determine status
-        function getStreamStatus(datetime) {
-            const now = new Date();
-            const streamDate = new Date(datetime);
-            const diffHours = (streamDate - now) / (1000 * 60 * 60);
-            
-            // Check if stream is live or within 2 hours
-            if (diffHours <= 0 && diffHours > -2) {
-                return { status: 'live', text: 'LIVE' };
-            } else if (diffHours > 0 && diffHours <= 2) {
-                return { status: 'live', text: 'STARTING SOON' };
-            }
-            
-            // Check if stream is today
-            const isToday = streamDate.toDateString() === now.toDateString();
-            if (isToday) {
-                const timeStr = streamDate.toLocaleTimeString('en-US', { 
-                    hour: 'numeric', 
-                    minute: '2-digit', 
-                    timeZoneName: 'short' 
-                });
-                return { status: 'today', text: timeStr };
-            }
-            
-            // Otherwise show date
-            const dateStr = streamDate.toLocaleDateString('en-US', { 
-                month: 'short', 
-                day: 'numeric' 
-            });
-            return { status: 'upcoming', text: dateStr };
-        }
 
         // Function to display upcoming streams
         function displayUpcomingStreams() {
             const streamsGrid = document.getElementById('streams-grid');
+            if (!streamsGrid) {
+                console.error('Streams grid not found');
+                return;
+            }
+            
             streamsGrid.innerHTML = '';
 
             upcomingStreams.forEach((stream, index) => {
-                const { status, text } = getStreamStatus(stream.datetime);
-                
                 const streamCard = document.createElement('div');
                 streamCard.className = 'stream-card';
                 streamCard.style.animationDelay = `${index * 0.1}s`;
-
-                const timeStr = stream.datetime.toLocaleString('en-US', {
-                    weekday: 'short',
-                    month: 'short',
-                    day: 'numeric',
-                    hour: 'numeric',
-                    minute: '2-digit',
-                    timeZoneName: 'short'
-                });
 
                 streamCard.innerHTML = `
                     <a href="${stream.url}" target="_blank" class="stream-link">
                         <div class="stream-image-container">
                             <img src="${stream.image}" alt="${stream.title}" class="stream-image">
-                            <div class="stream-status ${status}">${text}</div>
+                            <div class="stream-status upcoming">${stream.date}</div>
                         </div>
                         <div class="stream-info">
                             <div class="stream-title">${stream.title}</div>
                             <div class="stream-time">
                                 <span class="stream-time-icon">🕐</span>
-                                <span>${timeStr}</span>
+                                <span>${stream.date} at ${stream.time}</span>
                             </div>
                         </div>
                     </a>
