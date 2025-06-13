@@ -1217,17 +1217,6 @@
             });
         }
 
-        // Display live packs, last week's winners, and upcoming streams
-        displayLivePacks();
-        displayLastWeekWinners();
-        displayUpcomingStreams();
-
-        // Remove loading indicator once iframe loads
-        const iframe = document.querySelector('.dashboard-container iframe');
-        iframe.onload = function() {
-            document.querySelector('.dashboard-loading').style.display = 'none';
-        };
-
         // Three.js Starfield Background
         function initStarfield() {
             const canvas = document.getElementById('starfield');
@@ -1326,9 +1315,26 @@
             animate();
         }
 
-        // Initialize starfield when DOM is ready
+        // Initialize everything when DOM is ready
         document.addEventListener('DOMContentLoaded', () => {
+            // Display all sections
+            displayLivePacks();
+            displayLastWeekWinners();
+            displayUpcomingStreams();
+            
+            // Initialize starfield
             initStarfield();
+            
+            // Remove loading indicator once iframe loads
+            const iframe = document.querySelector('.dashboard-container iframe');
+            if (iframe) {
+                iframe.onload = function() {
+                    const loading = document.querySelector('.dashboard-loading');
+                    if (loading) {
+                        loading.style.display = 'none';
+                    }
+                };
+            }
         });
     </script>
 </body>
