@@ -366,8 +366,8 @@
             font-weight: bold;
         }
 
-        /* Latest Hits Section */
-        .latest-hits-section {
+        /* Last Week's Winners Section */
+        .last-winners-section {
             margin-top: 40px;
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
@@ -377,80 +377,98 @@
             animation: slideIn 1s ease-out 1.4s both;
         }
 
-        .latest-hits-section h2 {
+        .last-winners-section h2 {
             text-align: center;
             margin-bottom: 25px;
             font-size: 2em;
             color: #4ecdc4;
         }
 
-        .hits-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-            max-height: 600px;
-            overflow-y: auto;
-            padding: 10px;
+        .winners-list {
+            max-width: 700px;
+            margin: 0 auto;
         }
 
-        .hit-card {
-            background: rgba(255, 255, 255, 0.08);
+        .winner-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
-            overflow: hidden;
             transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
+            opacity: 0;
+            animation: fadeInUp 0.5s ease-out forwards;
         }
 
-        .hit-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+        .winner-item:nth-child(1) { animation-delay: 0.1s; }
+        .winner-item:nth-child(2) { animation-delay: 0.2s; }
+        .winner-item:nth-child(3) { animation-delay: 0.3s; }
+        .winner-item:nth-child(4) { animation-delay: 0.4s; }
+        .winner-item:nth-child(5) { animation-delay: 0.5s; }
+        .winner-item:nth-child(6) { animation-delay: 0.6s; }
+        .winner-item:nth-child(7) { animation-delay: 0.7s; }
+        .winner-item:nth-child(8) { animation-delay: 0.8s; }
+        .winner-item:nth-child(9) { animation-delay: 0.9s; }
+        .winner-item:nth-child(10) { animation-delay: 1s; }
+
+        .winner-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
         }
 
-        .hit-image {
-            width: 100%;
-            height: 250px;
-            background: linear-gradient(135deg, #4a4a6a, #3a3a5a);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2em;
-            opacity: 0.5;
+        .winner-item.gold {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+            border: 1px solid rgba(255, 215, 0, 0.3);
         }
 
-        .hit-info {
-            padding: 15px;
+        .winner-item.silver {
+            background: linear-gradient(135deg, rgba(192, 192, 192, 0.2), rgba(192, 192, 192, 0.1));
+            border: 1px solid rgba(192, 192, 192, 0.3);
         }
 
-        .hit-card-name {
+        .winner-item.bronze {
+            background: linear-gradient(135deg, rgba(205, 127, 50, 0.2), rgba(205, 127, 50, 0.1));
+            border: 1px solid rgba(205, 127, 50, 0.3);
+        }
+
+        .winner-rank {
+            font-size: 1.5em;
+            font-weight: bold;
+            width: 50px;
+            text-align: center;
+        }
+
+        .winner-info {
+            flex: 1;
+            margin-left: 20px;
+        }
+
+        .winner-username {
+            font-size: 1.2em;
             font-weight: bold;
             margin-bottom: 5px;
-            color: #fff;
         }
 
-        .hit-player {
-            font-size: 0.9em;
-            color: #888;
-            margin-bottom: 5px;
-        }
-
-        .hit-value {
+        .winner-spent {
             color: #4ecdc4;
-            font-weight: bold;
+            font-size: 0.9em;
         }
 
-        .instagram-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.8em;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+        .winner-prize {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #ff6b6b;
+            min-width: 100px;
+            text-align: right;
+        }
+
+        .winner-date {
+            text-align: center;
+            margin-top: 20px;
+            color: #888;
+            font-size: 0.9em;
         }
 
         /* Scrollbar styling */
@@ -624,26 +642,33 @@
             </div>
         </div>
 
-        <!-- Latest Hits Section -->
-        <div class="latest-hits-section">
-            <h2>Latest Hits 🎯</h2>
-            <p style="text-align: center; margin-bottom: 20px; color: #888;">Community hits shared on Instagram & approved by King Luke</p>
-            <div class="hits-container" id="hits-container">
-                <!-- Hits will be dynamically inserted here -->
+        <!-- Last Week's Winners Section -->
+        <div class="last-winners-section">
+            <h2>Last Week's Winners 🏆</h2>
+            <p style="text-align: center; margin-bottom: 20px; color: #888;">Congratulations to our previous leaderboard champions!</p>
+            <div class="winners-list" id="winners-list">
+                <!-- Winners will be dynamically inserted here -->
             </div>
         </div>
     </div>
 
     <script>
-        // Countdown timer function
+        // Countdown timer function - 2-week cycles starting June 1, 2025 00:00:00 PST
         function updateCountdown() {
-            // Set the reset date (2 weeks from now for example)
-            const resetDate = new Date();
-            resetDate.setDate(resetDate.getDate() + 14);
-            resetDate.setHours(0, 0, 0, 0);
-
+            // Start date: June 1, 2025 00:00:00 PST (UTC-8)
+            const startDate = new Date('2025-06-01T08:00:00Z'); // 00:00 PST = 08:00 UTC
+            const cycleDuration = 14 * 24 * 60 * 60 * 1000; // 14 days in milliseconds
+            
             const now = new Date();
-            const timeRemaining = resetDate - now;
+            const timeSinceStart = now - startDate;
+            
+            // Calculate which cycle we're in
+            const currentCycle = Math.floor(timeSinceStart / cycleDuration);
+            
+            // Calculate the end of current cycle
+            const currentCycleEnd = new Date(startDate.getTime() + (currentCycle + 1) * cycleDuration);
+            
+            const timeRemaining = currentCycleEnd - now;
 
             if (timeRemaining > 0) {
                 const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
@@ -655,7 +680,8 @@
                     `${days}d ${hours}h ${minutes}m ${seconds}s`;
             } else {
                 document.getElementById('countdown').innerHTML = 'Resetting...';
-                // In production, trigger a reset here
+                // Reload page after a brief delay to show new cycle
+                setTimeout(() => location.reload(), 2000);
             }
         }
 
@@ -735,6 +761,56 @@
             { cardName: "Tom Brady PSA 10", player: "Grid****", value: "$900", time: "1 day ago" }
         ];
 
+        // Last week's winners data (replace with real data from previous cycle)
+        const lastWeekWinners = [
+            { username: "MTGMaster", spent: 1450.00, prize: 300 },
+            { username: "CardShark", spent: 1200.50, prize: 200 },
+            { username: "PackAddict", spent: 980.25, prize: 150 },
+            { username: "RareHunter", spent: 850.00, prize: 100 },
+            { username: "FoilKing", spent: 725.75, prize: 75 },
+            { username: "DeckBuilder", spent: 650.00, prize: 50 },
+            { username: "ProTrader", spent: 525.50, prize: 40 },
+            { username: "LuckyPuller", spent: 480.00, prize: 35 },
+            { username: "ValueSeeker", spent: 425.25, prize: 30 },
+            { username: "PackRipper", spent: 375.00, prize: 20 }
+        ];
+
+        // Function to display last week's winners
+        function displayLastWeekWinners() {
+            const winnersList = document.getElementById('winners-list');
+            winnersList.innerHTML = '';
+
+            lastWeekWinners.forEach((winner, index) => {
+                const winnerItem = document.createElement('div');
+                winnerItem.className = 'winner-item';
+                
+                // Add special classes for top 3
+                if (index === 0) winnerItem.classList.add('gold');
+                if (index === 1) winnerItem.classList.add('silver');
+                if (index === 2) winnerItem.classList.add('bronze');
+
+                const rank = index + 1;
+                const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
+
+                winnerItem.innerHTML = `
+                    <div class="winner-rank">${medal}</div>
+                    <div class="winner-info">
+                        <div class="winner-username">${censorUsername(winner.username)}</div>
+                        <div class="winner-spent">Total Spent: ${winner.spent.toFixed(2)}</div>
+                    </div>
+                    <div class="winner-prize">${winner.prize}</div>
+                `;
+
+                winnersList.appendChild(winnerItem);
+            });
+
+            // Add date range for last week
+            const dateRange = document.createElement('div');
+            dateRange.className = 'winner-date';
+            dateRange.innerHTML = 'Period: May 18 - June 1, 2025';
+            winnersList.appendChild(dateRange);
+        }
+
         // Function to display live packs
         function displayLivePacks() {
             const packsGrid = document.getElementById('live-packs-grid');
@@ -784,9 +860,9 @@
             });
         }
 
-        // Display live packs and hits
+        // Display live packs and last week's winners
         displayLivePacks();
-        displayLatestHits();
+        displayLastWeekWinners();
 
         // Remove loading indicator once iframe loads
         const iframe = document.querySelector('.dashboard-container iframe');
