@@ -638,11 +638,15 @@
         .stream-image-container {
             position: relative;
             width: 100%;
-            height: 180px;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
             overflow: hidden;
+            background: linear-gradient(135deg, #3a3a5a, #2a2a4a);
         }
 
         .stream-image {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -1037,6 +1041,20 @@
             { username: "PackRipper", spent: 375.00, prize: 20 }
         ];
 
+        // Last week's winners data (replace with real data from previous cycle)
+        const lastWeekWinners = [
+            { username: "MTGMaster", spent: 1450.00, prize: 300 },
+            { username: "CardShark", spent: 1200.50, prize: 200 },
+            { username: "PackAddict", spent: 980.25, prize: 150 },
+            { username: "RareHunter", spent: 850.00, prize: 100 },
+            { username: "FoilKing", spent: 725.75, prize: 75 },
+            { username: "DeckBuilder", spent: 650.00, prize: 50 },
+            { username: "ProTrader", spent: 525.50, prize: 40 },
+            { username: "LuckyPuller", spent: 480.00, prize: 35 },
+            { username: "ValueSeeker", spent: 425.25, prize: 30 },
+            { username: "PackRipper", spent: 375.00, prize: 20 }
+        ];
+
         // Function to display last week's winners
         function displayLastWeekWinners() {
             const winnersList = document.getElementById('winners-list');
@@ -1091,6 +1109,66 @@
                 `;
 
                 packsGrid.appendChild(packCard);
+            });
+        }
+
+        // Upcoming streams data
+        const upcomingStreams = [
+            {
+                url: "https://www.dripshop.live/streams/bb14bed3-0c90-4f24-a29f-35410820862f?referral=KingLukeMtg",
+                image: "https://cdn.dripshop.live/stream/AfoHjU9MJT0x_qunmGlbr.webp",
+                title: "Final Fantasy RELEASE WEEKEND! Free Packs, Auctions & More with King Luke!",
+                date: "Jun 14",
+                time: "3:00 PM EST"
+            },
+            {
+                url: "https://www.dripshop.live/streams/1e415753-1ac9-4e07-961a-89132c9a28a7?referral=KingLukeMtg",
+                image: "https://cdn.dripshop.live/stream/AfoHjU9MJT0x_qunmGlbr.webp",
+                title: "Upcoming Stream",
+                date: "Jun 18",
+                time: "3:00 PM EST"
+            },
+            {
+                url: "https://www.dripshop.live/streams/3667a8eb-2341-45cc-a1db-4d317e8d799b?referral=KingLukeMtg",
+                image: "https://cdn.dripshop.live/stream/AfoHjU9MJT0x_qunmGlbr.webp",
+                title: "Upcoming Stream",
+                date: "Jun 21",
+                time: "3:00 PM EST"
+            }
+        ];
+
+        // Function to display upcoming streams
+        function displayUpcomingStreams() {
+            const streamsGrid = document.getElementById('streams-grid');
+            if (!streamsGrid) {
+                console.error('Streams grid not found');
+                return;
+            }
+            
+            streamsGrid.innerHTML = '';
+
+            upcomingStreams.forEach((stream, index) => {
+                const streamCard = document.createElement('div');
+                streamCard.className = 'stream-card';
+                streamCard.style.animationDelay = `${index * 0.1}s`;
+
+                streamCard.innerHTML = `
+                    <a href="${stream.url}" target="_blank" class="stream-link">
+                        <div class="stream-image-container">
+                            <img src="${stream.image}" alt="${stream.title}" class="stream-image">
+                            <div class="stream-status upcoming">${stream.date}</div>
+                        </div>
+                        <div class="stream-info">
+                            <div class="stream-title">${stream.title}</div>
+                            <div class="stream-time">
+                                <span class="stream-time-icon">🕐</span>
+                                <span>${stream.date} at ${stream.time}</span>
+                            </div>
+                        </div>
+                    </a>
+                `;
+
+                streamsGrid.appendChild(streamCard);
             });
         }
 
